@@ -2,10 +2,24 @@ import React, { useState } from "react";
 import ToggleTheme from "@/components/ToggleTheme";
 import { useTranslation } from "react-i18next";
 import LangToggle from "@/components/LangToggle";
-import Label from "@/components/Label";
+import Label from "@/components/label/Label";
 import { Input } from "@/components/ui/input";
 import { Label as ShadCnLabel } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+
+const TERPENES = [
+    { name: "α-Pinene", percentage: 0.05, id: "alphaPinene" },
+    { name: "β-Pinene", percentage: 0.05, id: "betaPinene" },
+    { name: "β-Mycrene", percentage: 0.05, id: "betaMycrene" },
+    { name: "Δ-Limonene", percentage: 0.05, id: "deltaLimonene" },
+    { name: "Terpinolene", percentage: 0.05, id: "terpinolene" },
+    { name: "Ocimene", percentage: 0.05, id: "ocimene" },
+    { name: "Linalool", percentage: 0.05, id: "linalool" },
+    { name: "β-Caryophyllene", percentage: 0.05, id: "betaCaryophyllene" },
+    { name: "β-Eudesmol", percentage: 0.05, id: "betaEudesmol" },
+    { name: "Caryophyllene Oxide", percentage: 0.05, id: "caryophylleneOxide" },
+    { name: "Trans Nerolidol", percentage: 0.05, id: "transNerolidol" },
+];
 
 export default function HomePage() {
     const [strainName, setStrainName] = useState("Gelato Cake");
@@ -14,7 +28,18 @@ export default function HomePage() {
     const [cbdaLevel, setCbdaLevel] = useState(0);
     const [totalThc, setTotalThc] = useState(0);
     const [totalCbd, setTotalCbd] = useState(0);
-    const [manufactureDate, setManufactureDate] = useState("");
+    const [alphaPinene, setAlphaPinene] = useState(0.05);
+    const [betaPinene, setBetaPinene] = useState(0.05);
+    const [betaMycrene, setBetaMycrene] = useState(0.05);
+    const [deltaLimonene, setDeltaLimonene] = useState(0.05);
+    const [terpinolene, setTerpinolene] = useState(0.05);
+    const [ocimene, setOcimene] = useState(0.05);
+    const [linalool, setLinalool] = useState(0.05);
+    const [betaCaryophyllene, setBetaCaryophyllene] = useState(0.05);
+    const [betaEudesmol, setBetaEudesmol] = useState(0.05);
+    const [caryophylleneOxide, setCaryophylleneOxide] = useState(0.05);
+    const [transNerolidol, setTransNerolidol] = useState(0.05);
+    const [expDate, setExpDate] = useState(new Date().toLocaleDateString("en-US"));
     const [packageSize, setPackageSize] = useState("");
     const { t } = useTranslation();
 
@@ -31,9 +56,9 @@ export default function HomePage() {
 
     return (
         <>
-            <div className="flex h-screen flex-col items-center justify-center gap-2">
-                <h1 className="text-4xl font-bold">{t("title")}</h1>
-                <div className="p-4">
+            <div className="max-w-screen flex h-screen flex-col items-center justify-center gap-2 overflow-y-auto">
+                <h1 className="font-special text-[120px]">{t("title")}</h1>
+                <div className="w-full p-4">
                     <div className="mb-4">
                         <ShadCnLabel htmlFor="strainName">Strain Name</ShadCnLabel>
                         <Input
@@ -91,22 +116,18 @@ export default function HomePage() {
                             />
                         </div>
                     </div>
-                    <div className="mb-4">
-                        <ShadCnLabel>Terpenes</ShadCnLabel>
-                        {terpenes.map((terpene, index) => (
-                            <div key={index} className="mb-2 flex">
-                                <Input
-                                    type="text"
-                                    placeholder="Terpene Name"
-                                    value={terpene.name}
-                                    onChange={(e) =>
-                                        handleTerpeneChange(index, "name", e.target.value)
-                                    }
-                                    className="mr-2"
-                                />
+                    <h1 className="font-special text-[50px]">Terpenes</h1>
+
+                    <div className="mb-4 grid grid-cols-2 gap-x-2 gap-y-4">
+                        {TERPENES.map((terpene, index) => (
+                            <div key={index} className="flex flex-col">
+                                <ShadCnLabel className="mb-2" htmlFor={terpene.id}>
+                                    {terpene.name}
+                                </ShadCnLabel>
                                 <Input
                                     type="number"
-                                    placeholder="Percentage"
+                                    id={terpene.id}
+                                    name={terpene.id}
                                     value={terpene.percentage}
                                     onChange={(e) =>
                                         handleTerpeneChange(
@@ -115,19 +136,19 @@ export default function HomePage() {
                                             parseFloat(e.target.value)
                                         )
                                     }
+                                    className="mr-2"
                                 />
                             </div>
                         ))}
-                        <Button onClick={addTerpene}>Add Terpene</Button>
                     </div>
 
                     <div className="mb-4">
-                        <ShadCnLabel htmlFor="manufactureDate">Manufacture Date</ShadCnLabel>
+                        <ShadCnLabel htmlFor="expDate">Exp Date</ShadCnLabel>
                         <Input
-                            id="manufactureDate"
+                            id="expDate"
                             type="date"
-                            value={manufactureDate}
-                            onChange={(e) => setManufactureDate(e.target.value)}
+                            value={expDate}
+                            onChange={(e) => setExpDate(e.target.value)}
                             className="mb-2"
                         />
                     </div>
@@ -151,7 +172,7 @@ export default function HomePage() {
                         cbdaLevel={cbdaLevel}
                         totalThc={totalThc}
                         totalCbd={totalCbd}
-                        manufactureDate={manufactureDate}
+                        expDate={expDate}
                         packageSize={packageSize}
                     />
                 </div>

@@ -52,6 +52,13 @@
 
         src: url("../assets/fonts/geist/Geist-UltraBlack.woff2") format("woff2");
     }
+
+    @font-face {
+        font-family: "District";
+        font-weight: "400";
+
+        src: url("../assets/fonts/district/district.woff2") format("woff2");
+    }
 }
 
 @layer base {

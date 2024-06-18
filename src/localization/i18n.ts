@@ -6,13 +6,13 @@ i18n.use(initReactI18next).init({
     resources: {
         en: {
             translation: {
-                title: "Label Printer",
+                title: "Phyto Label Printer",
                 description: "This is an example of translation in en",
             },
         },
         "es-MX": {
             translation: {
-                title: "Impresora de etiquetas",
+                title: "Phyto Impresora de etiquetas",
                 description: "Este es un ejemplo de traducción en es-MX.",
             },
         },
