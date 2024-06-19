@@ -126,11 +126,18 @@
 }
 
 @layer base {
+    html {
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+
     * {
         @apply m-0 border-border p-0 font-sans;
     }
-    body {
-        @apply overflow-hidden bg-background text-foreground;
+    body, div#app {
+        @apply bg-background text-foreground m-0 p-0 h-full w-full;
     }
     .draglayer {
         @apply bg-background;

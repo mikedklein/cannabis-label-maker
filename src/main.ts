@@ -14,7 +14,7 @@ function createWindow() {
         width: 800,
         height: 600,
         webPreferences: {
-            devTools: true,
+            devTools: inDevelopment,
             contextIsolation: true,
             nodeIntegration: true,
             nodeIntegrationInSubFrames: false,
