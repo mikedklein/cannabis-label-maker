@@ -1,4 +1,6 @@
 import React from "react";
+import path from "path";
+import satori from "satori";
 import { Button } from "@/components/ui/button";
 import { Col, Grid, Row } from "@/components/label/BreakdownItems";
 
@@ -23,45 +25,64 @@ const Label: React.FC<LabelProps> = ({
     expDate,
     packageSize,
 }) => {
-    const labelRef = React.useRef<HTMLDivElement>(null);
-
-    const printLabel = () => {
-        const printWindow = window.open("", "_blank");
-        const node = labelRef.current;
-        if (printWindow && node) {
-            // Copy all stylesheets
-            Array.from(document.styleSheets).forEach((styleSheet) => {
-                if (styleSheet.href) {
-                    const newLinkEl = printWindow.document.createElement("link");
-                    newLinkEl.rel = "stylesheet";
-                    newLinkEl.href = styleSheet.href;
-                    printWindow.document.head.appendChild(newLinkEl);
-                } else if (styleSheet.cssRules) {
-                    const newStyleEl = printWindow.document.createElement("style");
-                    Array.from(styleSheet.cssRules).forEach((cssRule) => {
-                        newStyleEl.appendChild(
-                            printWindow.document.createTextNode(cssRule.cssText)
-                        );
-                    });
-                    printWindow.document.head.appendChild(newStyleEl);
-                }
-            });
-
-            // Write the HTML
-            printWindow.document.body.innerHTML = node.outerHTML;
-
-            setTimeout(() => {
-                printWindow.document.close();
-                printWindow.print();
-            }, 1000);
+    const generateSVG = async () => {
+        const response = await fetch("./src/assets/fonts/district/district.ttf");
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+        const districtArrayBuffer = await response.arrayBuffer();
+
+        const svg = await satori(
+            <div
+                style={{
+                    height: "100%",
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#fff",
+                    fontSize: 32,
+                    fontWeight: 600,
+                }}
+            >
+                <div style={{ fontSize: "54px" }}>{strainName}</div>
+                <hr style={{ margin: "2px 0", width: "100%", borderColor: "#000" }} />
+            </div>,
+            {
+                width: 216,
+                height: 120,
+                fonts: [
+                    {
+                        name: "District",
+                        // Use `fs` (Node.js only) or `fetch` to read the font as Buffer/ArrayBuffer and provide `data` here.
+                        data: districtArrayBuffer,
+                        weight: 400,
+                        style: "normal",
+                    },
+                ],
+            }
+        );
+        return svg;
+    };
+
+    const downloadSVG = async () => {
+        const svg = await generateSVG();
+
+        const blob = new Blob([svg], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "label.svg";
+        a.click();
+        URL.revokeObjectURL(url);
     };
 
     return (
         <div className="flex flex-col items-center gap-y-2">
             <h2 className="font-special text-[50px]">Label Proof</h2>
             <div className="my-5 rounded-md border border-gray-300 p-2">
-                <div ref={labelRef} className="h-[1.25in] w-[2.25in]">
+                <div className="h-[1.25in] w-[2.25in]">
                     <div className="-mb-[10px] font-special text-[54px] leading-none">
                         {strainName}
                     </div>
@@ -107,7 +128,7 @@ const Label: React.FC<LabelProps> = ({
                 </div>
             </div>
 
-            <Button onClick={printLabel}>Print Label</Button>
+            <Button onClick={downloadSVG}>Save Label</Button>
         </div>
     );
 };

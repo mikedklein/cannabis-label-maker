@@ -1,5 +1,6 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import registerListeners from "./helpers/ipc/listeners-register";
+import fs from "fs";
 import path from "path";
 
 const inDevelopment = process.env.NODE_ENV === "development";

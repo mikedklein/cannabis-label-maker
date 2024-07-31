@@ -12,11 +12,16 @@
         "strict": true,
         "baseUrl": ".",
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": [
+                "./src/*"
+            ]
         },
         "outDir": "dist",
         "moduleResolution": "node",
         "resolveJsonModule": true
     },
-    "include": ["src"]
+    "include": [
+        "src",
+        "./electron.d.ts"
+    ]
 }
